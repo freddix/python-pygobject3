@@ -2,12 +2,12 @@
 
 Summary:	Python bindings for GObject library
 Name:		python-%{module}3
-Version:	3.4.2
+Version:	3.8.0
 Release:	1
 License:	LGPL
 Group:		Libraries/Python
-Source0:	http://ftp.gnome.org/pub/gnome/sources/pygobject/3.4/%{module}-%{version}.tar.xz
-# Source0-md5:	a17b3897507f179d643e02f5abf111ac
+Source0:	http://ftp.gnome.org/pub/gnome/sources/pygobject/3.8/%{module}-%{version}.tar.xz
+# Source0-md5:	5a1dc34c787b4320da032e87412caca4
 Patch0:		%{name}-link.patch
 URL:		http://www.pygtk.org/
 BuildRequires:	autoconf
@@ -44,8 +44,15 @@ Requires:	gtk-doc-common
 pygobject API documentation.
 
 %prep
-%setup -q -n %{module}-%{version}
+%setup -qn %{module}-%{version}
 %patch0 -p1
+
+# kill gnome common deps
+%{__sed} -i -e 's/GNOME_COMPILE_WARNINGS.*//g'	\
+    -i -e 's/GNOME_MAINTAINER_MODE_DEFINES//g'	\
+    -i -e 's/GNOME_COMMON_INIT//g'		\
+    -i -e 's/GNOME_CXX_WARNINGS.*//g'		\
+    -i -e 's/GNOME_DEBUG_CHECK//g' configure.ac
 
 %build
 %{__libtoolize}
@@ -54,7 +61,8 @@ pygobject API documentation.
 %{__autoheader}
 %{__automake}
 %configure \
-	--disable-silent-rules
+	--disable-silent-rules	\
+	--with-python=python
 %{__make}
 
 %install
@@ -95,6 +103,9 @@ rm -rf $RPM_BUILD_ROOT
 %{py_sitedir}/gi/_gobject/*.py[co]
 %{py_sitedir}/gi/overrides/*.py[co]
 %{py_sitedir}/gi/repository/*.py[co]
+
+%dir %{py_sitedir}/pygtkcompat
+%{py_sitedir}/pygtkcompat/*.py[co]
 
 %files devel
 %defattr(644,root,root,755)
