@@ -2,19 +2,19 @@
 
 Summary:	Python bindings for GObject library
 Name:		python-%{module}3
-Version:	3.8.3
+Version:	3.10.0
 Release:	1
 License:	LGPL
 Group:		Libraries/Python
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/pygobject/3.8/%{module}-%{version}.tar.xz
-# Source0-md5:	1621d68fcd522575ed0a9e7017004319
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/pygobject/3.10/%{module}-%{version}.tar.xz
+# Source0-md5:	54eebf75547abc6b97a90a150160e154
 Patch0:		%{name}-link.patch
 URL:		http://www.pygtk.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	cairo-devel
-BuildRequires:	glib-gio-devel
-BuildRequires:	gobject-introspection-devel
+BuildRequires:	glib-gio-devel >= 1:2.38.0
+BuildRequires:	gobject-introspection-devel >= 1.38.0
 BuildRequires:	libtool
 BuildRequires:	libxslt-progs
 BuildRequires:	python-devel
@@ -162,10 +162,10 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libpyglib-gi-2.0-python3.so.*.*.*
 
 %dir %{py3_sitedir}/gi
-%attr(755,root,root) %{py3_sitedir}/gi/_gi.so
-%attr(755,root,root) %{py3_sitedir}/gi/_gi_cairo.so
-%attr(755,root,root) %{py3_sitedir}/gi/_glib/_glib.so
-%attr(755,root,root) %{py3_sitedir}/gi/_gobject/_gobject.so
+%attr(755,root,root) %{py3_sitedir}/gi/_gi.*.so
+%attr(755,root,root) %{py3_sitedir}/gi/_gi_cairo.*.so
+%attr(755,root,root) %{py3_sitedir}/gi/_glib/_glib.*.so
+%attr(755,root,root) %{py3_sitedir}/gi/_gobject/_gobject.*.so
 
 %dir %{py3_sitedir}/gi/_glib
 %dir %{py3_sitedir}/gi/_gobject
