@@ -2,19 +2,18 @@
 
 Summary:	Python bindings for GObject library
 Name:		python-%{module}3
-Version:	3.10.2
+Version:	3.12.0
 Release:	1
 License:	LGPL
 Group:		Libraries/Python
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/pygobject/3.10/%{module}-%{version}.tar.xz
-# Source0-md5:	f311155be8510df6ad8e4edf1cb463d4
-Patch0:		%{name}-link.patch
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/pygobject/3.12/%{module}-%{version}.tar.xz
+# Source0-md5:	f62700cdd7919b5afbc1de54569df648
 URL:		http://www.pygtk.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	cairo-devel
-BuildRequires:	glib-gio-devel >= 1:2.38.0
-BuildRequires:	gobject-introspection-devel >= 1.38.0
+BuildRequires:	glib-gio-devel >= 1:2.40.0
+BuildRequires:	gobject-introspection-devel >= 1.40.0
 BuildRequires:	libtool
 BuildRequires:	libxslt-progs
 BuildRequires:	python-devel
@@ -36,46 +35,20 @@ Requires:	python3-modules
 %description -n python3-pygobject3
 Python 3.x bindings for GObject library.
 
-%package -n python3-pygobject3-devel
-Summary:	Python bindings for GObject library
-Group:		Development/Languages/Python
-Requires:	%{name}-common-devel = %{version}-%{release}
-Requires:	python3-pygobject3 = %{version}-%{release}
-Requires:	python3-devel
-
-%package common-devel
-Summary:	Python bindings for GObject library
-Group:		Development/Languages/Python
-Requires:	%{name} = %{version}-%{release}
-
-%description common-devel
-This package contains files required to build wrappers for GObject
-addon libraries so that they interoperate with Python bindings.
-
 %package devel
 Summary:	Python bindings for GObject library
 Group:		Development/Languages/Python
-Requires:	%{name}-common-devel = %{version}-%{release}
+Requires:	%{name} = %{version}-%{release}
+Requires:	python3-pygobject3 = %{version}-%{release}
+Obsoletes:	%{name}-common-devel
+Obsoletes:	python3-pygobject3-devel
 
 %description devel
 This package contains files required to build wrappers for GObject
 addon libraries so that they interoperate with Python bindings.
 
-%description -n python3-pygobject3-devel
-This package contains files required to build wrappers for GObject
-addon libraries so that they interoperate with Python bindings.
-
-%package apidocs
-Summary:	pygobject API documentation
-Group:		Documentation
-Requires:	gtk-doc-common
-
-%description apidocs
-pygobject API documentation.
-
 %prep
 %setup -qn %{module}-%{version}
-%patch0 -p1
 
 # kill gnome common deps
 %{__sed} -i -e 's/GNOME_COMPILE_WARNINGS.*//g'	\
@@ -115,9 +88,7 @@ rm -rf $RPM_BUILD_ROOT
 	DESTDIR=$RPM_BUILD_ROOT \
 	TARGET_DIR=%{_gtkdocdir}/pygobject
 
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/*.la
-%{__rm} $RPM_BUILD_ROOT%{py_sitedir}/*/{*.la,*/*.la}
-%{__rm} $RPM_BUILD_ROOT%{py3_sitedir}/*/{*.la,*/*.la}
+find $RPM_BUILD_ROOT -name \*.la -exec rm {} \;
 
 %py_postclean
 
@@ -133,49 +104,35 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog NEWS README
-%attr(755,root,root) %ghost %{_libdir}/libpyglib-gi-2.0-python.so.0
-%attr(755,root,root) %{_libdir}/libpyglib-gi-2.0-python.so.*.*.*
-
 %dir %{py_sitedir}/gi
 %attr(755,root,root) %{py_sitedir}/gi/_gi.so
 %attr(755,root,root) %{py_sitedir}/gi/_gi_cairo.so
-%attr(755,root,root) %{py_sitedir}/gi/_glib/_glib.so
-%attr(755,root,root) %{py_sitedir}/gi/_gobject/_gobject.so
 
-%dir %{py_sitedir}/gi/_glib
 %dir %{py_sitedir}/gi/_gobject
 %dir %{py_sitedir}/gi/overrides
 %dir %{py_sitedir}/gi/repository
 %{py_sitedir}/gi/*.py[co]
-%{py_sitedir}/gi/_glib/*.py[co]
 %{py_sitedir}/gi/_gobject/*.py[co]
 %{py_sitedir}/gi/overrides/*.py[co]
 %{py_sitedir}/gi/repository/*.py[co]
 
 %dir %{py_sitedir}/pygtkcompat
 %{py_sitedir}/pygtkcompat/*.py[co]
+%{py_sitedir}/pygobject-*-py2*.egg-info
 
 %files -n python3-pygobject3
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog NEWS README
-%attr(755,root,root) %ghost %{_libdir}/libpyglib-gi-2.0-python3.so.0
-%attr(755,root,root) %{_libdir}/libpyglib-gi-2.0-python3.so.*.*.*
-
 %dir %{py3_sitedir}/gi
 %attr(755,root,root) %{py3_sitedir}/gi/_gi.*.so
 %attr(755,root,root) %{py3_sitedir}/gi/_gi_cairo.*.so
-%attr(755,root,root) %{py3_sitedir}/gi/_glib/_glib.*.so
-%attr(755,root,root) %{py3_sitedir}/gi/_gobject/_gobject.*.so
 
-%dir %{py3_sitedir}/gi/_glib
 %dir %{py3_sitedir}/gi/_gobject
 %dir %{py3_sitedir}/gi/overrides
 %dir %{py3_sitedir}/gi/repository
 %dir %{py3_sitedir}/pygtkcompat
 %{py3_sitedir}/gi/*.py
 %{py3_sitedir}/gi/__pycache__
-%{py3_sitedir}/gi/_glib/*.py
-%{py3_sitedir}/gi/_glib/__pycache__
 %{py3_sitedir}/gi/_gobject/*.py
 %{py3_sitedir}/gi/_gobject/__pycache__
 %{py3_sitedir}/gi/overrides/*.py
@@ -184,23 +141,10 @@ rm -rf $RPM_BUILD_ROOT
 %{py3_sitedir}/gi/repository/__pycache__
 %{py3_sitedir}/pygtkcompat/*.py
 %{py3_sitedir}/pygtkcompat/__pycache__
-
-%files common-devel
-%defattr(644,root,root,755)
-%{_includedir}/pygobject-3.0
-%{_pkgconfigdir}/pygobject-3.0.pc
+%{py3_sitedir}/pygobject-*-py3*.egg-info
 
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libpyglib-gi-2.0-python.so
-
-%files -n python3-pygobject3-devel
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libpyglib-gi-2.0-python3.so
-
-%if 0
-%files apidocs
-%defattr(644,root,root,755)
-%{_gtkdocdir}/%{module}
-%endif
+%{_includedir}/pygobject-3.0
+%{_pkgconfigdir}/pygobject-3.0.pc
 
