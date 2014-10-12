@@ -2,18 +2,18 @@
 
 Summary:	Python bindings for GObject library
 Name:		python-%{module}3
-Version:	3.12.1
+Version:	3.14.0
 Release:	1
 License:	LGPL
 Group:		Libraries/Python
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/pygobject/3.12/%{module}-%{version}.tar.xz
-# Source0-md5:	8608682f221feaac81adb3f4e40dbef3
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/pygobject/3.14/%{module}-%{version}.tar.xz
+# Source0-md5:	17722912afa982a6feace4bb9bf52778
 URL:		http://www.pygtk.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	cairo-devel
-BuildRequires:	glib-gio-devel >= 1:2.40.0
-BuildRequires:	gobject-introspection-devel >= 1.40.0
+BuildRequires:	glib-gio-devel >= 1:2.42.0
+BuildRequires:	gobject-introspection-devel >= 1.42.0
 BuildRequires:	libtool
 BuildRequires:	libxslt-progs
 BuildRequires:	python-devel
